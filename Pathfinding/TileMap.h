@@ -1,5 +1,6 @@
 #pragma once
 
+#include <AI.h>
 #include <XEngine.h>
 
 class TileMap
@@ -12,8 +13,10 @@ public:
 	int GetIndex(int column, int row) const;
 
 private:
+	AI::GridBasedGraph mGraph;
 	std::vector<int> mMap;
 	std::vector<X::TextureId> mTiles; // I forgot to add this in class
+	std::vector<bool> mBlocked;
 	int mColumns = 0;
 	int mRows = 0;
 };
