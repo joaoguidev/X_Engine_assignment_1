@@ -26,14 +26,14 @@ namespace AI
 
 		void Initialize(int columns, int rows);
 
-		Node* GetNode(int x, int y);
-		const Node* GetNode(int x, int y) const;
+		Node* GetNode(int column, int row);
+		const Node* GetNode(int column, int row) const;
 
 		int GetColumns() const { return mColumns; }
 		int GetRows() const { return mRows; }
 
 	private:
-		int GetIndex(int x, int y) const;
+		int GetIndex(int column, int row) const;
 
 		std::vector<Node> mNodes;
 		int mColumns = 0;

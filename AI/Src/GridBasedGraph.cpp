@@ -5,27 +5,43 @@ using namespace AI;
 
 void GridBasedGraph::Initialize(int columns, int rows)
 {
-	// TODO
+	mColumns = columns;
+	mRows = rows;
+	// Done
 	// Resize mNodes to the matching dimension
+	mNodes.clear();
+	mNodes.reserve(mColumns * mRows);
+	
 	// For each node, set it's attributes (row/column)
+	for (int r = 0; r < rows; r++)
+	{
+		for (int c = 0; c < columns; c++)
+		{
+			GridBasedGraph::Node* newNode = new Node();
+			newNode->columns = c;
+			newNode->row = r;
+			mNodes.push_back(*newNode);
+		}
+	}
 	// However, the connection is up to the user
+
+
 }
 
-GridBasedGraph::Node* GridBasedGraph::GetNode(int x, int y)
+GridBasedGraph::Node* GridBasedGraph::GetNode(int column, int row)
 {
-	// TODO
-
-	return nullptr;
+	// Done
+	return &mNodes[GetIndex(column, row)];
 }
 
-const GridBasedGraph::Node* GridBasedGraph::GetNode(int x, int y) const
+const GridBasedGraph::Node* GridBasedGraph::GetNode(int column, int row) const
 {
-	// TODO
-	return nullptr;
+	// Done
+	return &mNodes[GetIndex(column, row)] ;
 }
 
-int GridBasedGraph::GetIndex(int x, int y) const
+int GridBasedGraph::GetIndex(int column, int row) const
 {
-	// TODO
-	return 0;
+	// Done
+	return column + (row * mColumns);
 }

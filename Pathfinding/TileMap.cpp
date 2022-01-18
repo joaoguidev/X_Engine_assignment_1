@@ -15,7 +15,7 @@ namespace
 
 void TileMap::LoadTiles(const char* fileName)
 {
-	// TODO - Read the provided file and populate mTiles here
+	// Done - Read the provided file and populate mTiles here
 
 	mTiles.clear();
 	FILE* file = nullptr;
@@ -40,16 +40,7 @@ void TileMap::LoadTiles(const char* fileName)
 
 void TileMap::LoadMap(const char* fileName)
 {
-	// TODO - Read the provided file and populate mMap here
-
-		// TODO - Initialize graph
-		// mGraph.Initialize(mColumns, mRows);
-		// for ()
-		//   for ()
-		//     // connect nodes to it's neighbors
-		// mGraph.GetNode(4, 5)->neighbors[GridBasedGraph::East] = mGraph.GetNode(5, 5);
-
-	// Read the provided file and populate mMap here
+	// Done - Read the provided file and populate mMap here
 	FILE* file = nullptr;
 	fopen_s(&file, fileName, "r");
 	if (!fopen_s)
@@ -75,6 +66,84 @@ void TileMap::LoadMap(const char* fileName)
 
 	fclose(file);
 
+
+	
+
+	// Done - Initialize graph
+	mGraph.Initialize(mColumns, mRows);
+	for (int r = 0; r < mRows; r++)
+	{
+		for (int c = 0;  c < mColumns; c++)
+		{
+			//North
+			if (r - 1 < 0) {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::North] = nullptr;
+			}
+			else {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::North] = mGraph.GetNode(c, r - 1);
+			}
+
+			//NorthWest
+			if (  c - 1 < 0 || r - 1 < 0) {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthWest] = nullptr;
+			}
+			else {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthWest] = mGraph.GetNode(c - 1, r - 1);
+			}
+
+			//West
+			if (c - 1 < 0) {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::West] = nullptr;
+			}
+			else {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::West] = mGraph.GetNode(c - 1, r);
+			}
+
+			//SouthWest
+			if ( c - 1 < 0 || r + 1 >= mRows) {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthWest] = nullptr;
+			}
+			else {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthWest] = mGraph.GetNode(c - 1, r + 1);
+			}
+
+			//South
+			if (r + 1 >= mRows) {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::South] = nullptr;
+			}
+			else {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::South] = mGraph.GetNode(c, r + 1);
+			}
+
+			//SouthEast
+			if (c + 1 >= mColumns || r + 1 >= mRows) {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthEast] = nullptr;
+			}
+			else {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthEast] = mGraph.GetNode(c + 1, r + 1);
+			}
+
+			//East
+			if (c + 1 >= mColumns) {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::East] = nullptr;
+			}
+			else {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::East] = mGraph.GetNode(c + 1, r);
+			}
+
+			//NorthEast
+			if (c + 1 >= mColumns || r - 1 < 0) {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthEast] = nullptr;
+			}
+			else {
+				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthEast] = mGraph.GetNode(c + 1, r - 1);
+			}
+		}
+	}
+	//     // connect nodes to it's neighbors
+	// mGraph.GetNode(4, 5)->neighbors[GridBasedGraph::East] = mGraph.GetNode(5, 5);
+
+// Read the provided file and populate mMap here
 
 }
 
