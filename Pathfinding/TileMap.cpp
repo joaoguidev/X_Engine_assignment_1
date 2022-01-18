@@ -153,7 +153,45 @@ void TileMap::Render() const
 
 	// TODO - Use X::DrawScreenLine to visualize the graph
 	//X::DrawScreenLine
-
+	for (int r = 0; r < mRows; r++)
+	{
+		for (int c = 0; c < mColumns; c++)
+		{
+			GridBasedGraph::Node const *current  = mGraph.GetNode(c, r);
+			if (mGraph.GetNode(c, r)->neighbors[GridBasedGraph::North] != nullptr)
+			{
+				X::DrawScreenLine(current->columns * tileSize, current->row * tileSize, current->neighbors[GridBasedGraph::North]->columns * tileSize, current->neighbors[GridBasedGraph::North]->row * tileSize,X::Colors::Orange);
+			}
+			if (mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthEast] != nullptr)
+			{
+				X::DrawScreenLine(current->columns * tileSize, current->row * tileSize, current->neighbors[GridBasedGraph::NorthEast]->columns * tileSize, current->neighbors[GridBasedGraph::NorthEast]->row * tileSize, X::Colors::Orange);
+			}
+			if (mGraph.GetNode(c, r)->neighbors[GridBasedGraph::East] != nullptr)
+			{
+				X::DrawScreenLine(current->columns * tileSize, current->row * tileSize, current->neighbors[GridBasedGraph::East]->columns * tileSize, current->neighbors[GridBasedGraph::East]->row * tileSize, X::Colors::Orange);
+			}
+			if (mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthEast] != nullptr)
+			{
+				X::DrawScreenLine(current->columns * tileSize, current->row * tileSize, current->neighbors[GridBasedGraph::SouthEast]->columns * tileSize, current->neighbors[GridBasedGraph::SouthEast]->row * tileSize, X::Colors::Orange);
+			}
+			if (mGraph.GetNode(c, r)->neighbors[GridBasedGraph::South] != nullptr)
+			{
+				X::DrawScreenLine(current->columns * tileSize, current->row * tileSize, current->neighbors[GridBasedGraph::South]->columns * tileSize, current->neighbors[GridBasedGraph::South]->row * tileSize, X::Colors::Orange);
+			}
+			if (mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthWest] != nullptr)
+			{
+				X::DrawScreenLine(current->columns * tileSize, current->row * tileSize, current->neighbors[GridBasedGraph::SouthWest]->columns * tileSize, current->neighbors[GridBasedGraph::SouthWest]->row * tileSize, X::Colors::Orange);
+			}
+			if (mGraph.GetNode(c, r)->neighbors[GridBasedGraph::West] != nullptr)
+			{
+				X::DrawScreenLine(current->columns * tileSize, current->row * tileSize, current->neighbors[GridBasedGraph::West]->columns * tileSize, current->neighbors[GridBasedGraph::West]->row * tileSize, X::Colors::Orange);
+			}
+			if (mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthWest] != nullptr)
+			{
+				X::DrawScreenLine(current->columns * tileSize, current->row * tileSize, current->neighbors[GridBasedGraph::NorthWest]->columns * tileSize, current->neighbors[GridBasedGraph::NorthWest]->row * tileSize, X::Colors::Orange);
+			}
+		}
+	}
 
 
 
