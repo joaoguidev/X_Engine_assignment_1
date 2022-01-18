@@ -14,6 +14,7 @@ void GridBasedGraph::Initialize(int columns, int rows)
 GridBasedGraph::Node* GridBasedGraph::GetNode(int x, int y)
 {
 	// TODO
+
 	return nullptr;
 }
 
