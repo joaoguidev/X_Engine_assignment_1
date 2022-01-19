@@ -11,6 +11,7 @@ public:
 
 	void Render() const;
 	int GetIndex(int column, int row) const;
+	bool IsBlocked(int x, int y) const;
 
 private:
 	AI::GridBasedGraph mGraph;

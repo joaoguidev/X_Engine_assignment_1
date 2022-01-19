@@ -22,16 +22,18 @@ void TileMap::LoadTiles(const char* fileName)
 	fopen_s(&file, fileName, "r");
 
 	int count = 0;
+	int isBlocked = 0;
 
 	fscanf_s(file, "Tiles: %d\n", &count);
 
 
-	for (int i = 0; i < count; i++)
+	for (int j = 0; j < count; j++)
 	{
 		char buffer[512];
-		fscanf_s(file, "%s\n", buffer, static_cast<int>(std::size(buffer)));
+		fscanf_s(file, "%s", buffer, static_cast<int>(std::size(buffer)));
 		mTiles.push_back(X::LoadTexture(buffer));
-
+		fscanf_s(file, " %i\n", &isBlocked);
+		mBlocked.push_back(isBlocked);
 	}
 
 	fclose(file);
@@ -75,69 +77,98 @@ void TileMap::LoadMap(const char* fileName)
 	{
 		for (int c = 0;  c < mColumns; c++)
 		{
-			//North
-			if (r - 1 < 0) {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::North] = nullptr;
-			}
-			else {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::North] = mGraph.GetNode(c, r - 1);
+			//**********************************REMEMBER************************
+			//======================== REFACTOR HERE!!!!!!!!!!!!!!!!! ===================
+			if (!IsBlocked(c, r))
+			{
+				//North
+				if (r - 1 < 0) {
+					mGraph.GetNode(c, r)->neighbors[GridBasedGraph::North] = nullptr;
+				}
+				else {
+					if (!IsBlocked(c, r - 1)) {
+						mGraph.GetNode(c, r)->neighbors[GridBasedGraph::North] = mGraph.GetNode(c, r - 1);
+					}
+				}
+
+				//NorthWest
+				if (c - 1 < 0 || r - 1 < 0) {
+					mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthWest] = nullptr;
+				}
+				else {
+					if (!IsBlocked(c - 1, r - 1)) {
+						mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthWest] = mGraph.GetNode(c - 1, r - 1);
+					}
+
+				}
+
+				//West
+				if (c - 1 < 0) {
+					mGraph.GetNode(c, r)->neighbors[GridBasedGraph::West] = nullptr;
+				}
+				else {
+
+					if (!IsBlocked(c - 1, r)) {
+						mGraph.GetNode(c, r)->neighbors[GridBasedGraph::West] = mGraph.GetNode(c - 1, r);
+					}
+				}
+
+				//SouthWest
+				if (c - 1 < 0 || r + 1 >= mRows) {
+					mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthWest] = nullptr;
+				}
+				else {
+
+					if (!IsBlocked(c - 1, r + 1)) {
+						mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthWest] = mGraph.GetNode(c - 1, r + 1);
+					}
+				}
+
+				//South
+				if (r + 1 >= mRows) {
+					mGraph.GetNode(c, r)->neighbors[GridBasedGraph::South] = nullptr;
+				}
+				else {
+
+					if (!IsBlocked(c, r + 1)) {
+						mGraph.GetNode(c, r)->neighbors[GridBasedGraph::South] = mGraph.GetNode(c, r + 1);
+					}
+				}
+
+				//SouthEast
+				if (c + 1 >= mColumns || r + 1 >= mRows) {
+					mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthEast] = nullptr;
+				}
+				else {
+
+					if (!IsBlocked(c + 1, r + 1)) {
+						mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthEast] = mGraph.GetNode(c + 1, r + 1);
+					}
+				}
+
+				//East
+				if (c + 1 >= mColumns) {
+					mGraph.GetNode(c, r)->neighbors[GridBasedGraph::East] = nullptr;
+				}
+				else {
+
+					if (!IsBlocked(c + 1, r)) {
+						mGraph.GetNode(c, r)->neighbors[GridBasedGraph::East] = mGraph.GetNode(c + 1, r);
+					}
+				}
+
+				//NorthEast
+				if (c + 1 >= mColumns || r - 1 < 0) {
+					mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthEast] = nullptr;
+				}
+				else {
+
+					if (!IsBlocked(c + 1, r - 1)) {
+						mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthEast] = mGraph.GetNode(c + 1, r - 1);
+					}
+				}
 			}
 
-			//NorthWest
-			if (  c - 1 < 0 || r - 1 < 0) {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthWest] = nullptr;
-			}
-			else {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthWest] = mGraph.GetNode(c - 1, r - 1);
-			}
-
-			//West
-			if (c - 1 < 0) {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::West] = nullptr;
-			}
-			else {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::West] = mGraph.GetNode(c - 1, r);
-			}
-
-			//SouthWest
-			if ( c - 1 < 0 || r + 1 >= mRows) {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthWest] = nullptr;
-			}
-			else {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthWest] = mGraph.GetNode(c - 1, r + 1);
-			}
-
-			//South
-			if (r + 1 >= mRows) {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::South] = nullptr;
-			}
-			else {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::South] = mGraph.GetNode(c, r + 1);
-			}
-
-			//SouthEast
-			if (c + 1 >= mColumns || r + 1 >= mRows) {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthEast] = nullptr;
-			}
-			else {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::SouthEast] = mGraph.GetNode(c + 1, r + 1);
-			}
-
-			//East
-			if (c + 1 >= mColumns) {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::East] = nullptr;
-			}
-			else {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::East] = mGraph.GetNode(c + 1, r);
-			}
-
-			//NorthEast
-			if (c + 1 >= mColumns || r - 1 < 0) {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthEast] = nullptr;
-			}
-			else {
-				mGraph.GetNode(c, r)->neighbors[GridBasedGraph::NorthEast] = mGraph.GetNode(c + 1, r - 1);
-			}
 		}
 	}
 	//     // connect nodes to it's neighbors
@@ -192,9 +223,6 @@ void TileMap::Render() const
 			}
 		}
 	}
-
-
-
 	//Draw the map using mTiles and mMap
 	for (int y = 0; y < mRows ; y++)
 	{
@@ -203,9 +231,11 @@ void TileMap::Render() const
 			const int mapIndex = GetIndex(x, y);
 			const int tileIndex = mMap[mapIndex];
 			const X::TextureId textureId = mTiles.at(tileIndex);
-			X::DrawSprite(textureId, {x * tileSize, y * tileSize} , X::Pivot::TopLeft);
+			X::DrawSprite(textureId, {x * tileSize, y * tileSize} , X::Pivot::Center);
 		}
 	}
+
+
 
 }
 
@@ -225,4 +255,12 @@ void TileMap::Render() const
 int TileMap::GetIndex(int column, int row) const
 {
 	return column + (row * mColumns);
+}
+
+
+bool TileMap::IsBlocked(int x, int y) const
+{
+	const int tile = mMap[ToIndex(x, y, mColumns)];
+	const bool blocked = mBlocked[tile];
+	return blocked;
 }
