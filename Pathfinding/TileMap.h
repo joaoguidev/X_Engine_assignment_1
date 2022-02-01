@@ -15,6 +15,7 @@ public:
 	std::vector<X::Math::Vector2> FindPathBFS(int startX, int startY, int endX, int endY);
 	std::vector<X::Math::Vector2> FindPathDFS(int startX, int startY, int endX, int endY);
 	std::vector<X::Math::Vector2> FindPathDijkstra(int startX, int startY, int endX, int endY);
+	std::vector<X::Math::Vector2> FindPathASearch(int startX, int startY, int endX, int endY);
 	X::Math::Vector2 GetPixelPosition(int x, int y) const;
 
 private:

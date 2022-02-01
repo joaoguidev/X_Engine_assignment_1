@@ -59,7 +59,10 @@ bool GameLoop(float deltaTime)
 	{
 		path = tileMap.FindPathDijkstra(startX, startY, endX, endY);
 	}
-
+	if (X::IsKeyDown(X::Keys::FOUR))
+	{
+		path = tileMap.FindPathASearch(startX, startY, endX, endY);
+	}
 
 	for (int i = 0; i + 1 < path.size(); ++i)
 	{

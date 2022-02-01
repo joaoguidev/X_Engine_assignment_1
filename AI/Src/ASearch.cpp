@@ -1,17 +1,17 @@
 #include "Precompiled.h"
-#include "Dijkstra.h"
+#include "ASearch.h"
 
 using namespace AI;
-
 namespace
 {
-	inline bool compareNodes(GridBasedGraph::Node* f, GridBasedGraph::Node* s)
+	inline int EuclideanDistance(GridBasedGraph::Node* node, int endX, int endY)
 	{
-		return f->g < s->g;
+		return static_cast<int>( sqrt(pow(endX - node->columns, 2) +
+			pow(endY - node->row, 2) * 1.0));
 	}
 }
 
-bool Dijkstra::Run(GridBasedGraph& graph, int startX, int startY, int endX, int endY, GetCost getCost)
+bool ASearch::Run(GridBasedGraph& graph, int startX, int startY, int endX, int endY, GetCost getCost)
 {
 	// Reset everything
 	graph.ResetSearchParams();
@@ -48,14 +48,15 @@ bool Dijkstra::Run(GridBasedGraph& graph, int startX, int startY, int endX, int 
 				{
 					continue;
 				}
-				
+
 				if (!neighbor->opened)
 				{
 					mOpenList.push_back(neighbor);
 					neighbor->opened = true;
 					neighbor->parent = node;
+					neighbor->h = EuclideanDistance(neighbor, endX, endY);
+					neighbor->g = node->g + getCost(node, neighbor) + neighbor->h;
 
-					neighbor->g = node->g + getCost(node, neighbor);
 				}
 				auto comparator = [](GridBasedGraph::Node* f, GridBasedGraph::Node* s) { return f->g < s->g; };
 				/*mOpenList.sort(compareNodes);*/

@@ -358,6 +358,34 @@ std::vector<X::Math::Vector2> TileMap::FindPathDijkstra(int startX, int startY, 
 	return path;
 }
 
+std::vector<X::Math::Vector2> TileMap::FindPathASearch(int startX, int startY, int endX, int endY)
+{
+	std::vector<X::Math::Vector2> path;
+
+	auto getCostWrapper = [&](auto nodeA, auto nodeB)
+	{
+		return GetCost(nodeA, nodeB);
+	};
+
+	ASearch aSearch;
+	if (aSearch.Run(mGraph, startX, startY, endX, endY, getCostWrapper))
+	{
+		const auto& closedList = aSearch.GetClosedList();
+		auto node = closedList.back();
+		while (node != nullptr)
+		{
+			path.push_back(GetPixelPosition(node->columns, node->row));
+			node = node->parent;
+		}
+		std::reverse(path.begin(), path.end());
+
+		// Cache the closed list for visualization
+		mClosedList = closedList;
+	}
+
+	return path;
+}
+
 X::Math::Vector2 TileMap::GetPixelPosition(int x, int y) const
 {
 	return {
