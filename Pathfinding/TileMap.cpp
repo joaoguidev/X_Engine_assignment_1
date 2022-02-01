@@ -244,7 +244,17 @@ void TileMap::Render() const
 		}
 	}
 
-
+	//Draw ClosedList
+	for (auto& node : mClosedList)
+	{
+		auto parent = node->parent;
+		if (parent != nullptr)
+		{
+			const auto a = GetPixelPosition(node->columns, node->row);
+			const auto b = GetPixelPosition(parent->columns, parent->row);
+			X::DrawScreenLine(a, b, X::Colors::Red);
+		}
+	}
 
 }
 
@@ -297,10 +307,76 @@ std::vector<X::Math::Vector2> TileMap::FindPathBFS(int startX, int startY, int e
 	return path;
 }
 
+std::vector<X::Math::Vector2> TileMap::FindPathDFS(int startX, int startY, int endX, int endY)
+{
+	std::vector<X::Math::Vector2> path;
+
+	DFS dfs;
+	if (dfs.Run(mGraph, startX, startY, endX, endY))
+	{
+		const auto& closedList = dfs.GetClosedList();
+		auto node = closedList.back();
+		while (node != nullptr)
+		{
+			path.push_back(GetPixelPosition(node->columns, node->row));
+			node = node->parent;
+		}
+		std::reverse(path.begin(), path.end());
+
+		// Cache the closed list for visualization
+		mClosedList = closedList;
+	}
+
+	return path;
+}
+
+std::vector<X::Math::Vector2> TileMap::FindPathDijkstra(int startX, int startY, int endX, int endY)
+{
+	std::vector<X::Math::Vector2> path;
+
+	auto getCostWrapper = [&](auto nodeA, auto nodeB)
+	{
+		return GetCost(nodeA, nodeB);
+	};
+
+	Dijkstra dijkstra;
+	if (dijkstra.Run(mGraph, startX, startY, endX, endY, getCostWrapper))
+	{
+		const auto& closedList = dijkstra.GetClosedList();
+		auto node = closedList.back();
+		while (node != nullptr)
+		{
+			path.push_back(GetPixelPosition(node->columns, node->row));
+			node = node->parent;
+		}
+		std::reverse(path.begin(), path.end());
+
+		// Cache the closed list for visualization
+		mClosedList = closedList;
+	}
+
+	return path;
+}
+
 X::Math::Vector2 TileMap::GetPixelPosition(int x, int y) const
 {
 	return {
 		(x + 0.5f) * mTileWidth,
 		(y + 0.5f) * mTileHeight,
 	};
+}
+
+float TileMap::GetCost(const AI::GridBasedGraph::Node* nodeA, const AI::GridBasedGraph::Node* nodeB) const
+{
+	const int fromTileIndex = ToIndex(nodeA->columns, nodeA->row, mColumns);
+	const int toTileIndex = ToIndex(nodeB->columns, nodeB->row, mColumns);
+	const int tileType = mMap[toTileIndex];
+	if (tileType == 1)
+	{
+		return 5.0f;
+	}
+	else
+	{
+		return 1.0f;
+	}
 }

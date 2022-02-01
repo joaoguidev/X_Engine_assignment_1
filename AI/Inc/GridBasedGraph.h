@@ -28,6 +28,8 @@ namespace AI
 			Node* parent = nullptr;
 			bool opened = false;
 			bool closed = false;
+			float g = 0.0f;
+			float h = 0.0f;
 		};
 
 		void Initialize(int columns, int rows);

@@ -35,6 +35,8 @@ void AI::GridBasedGraph::ResetSearchParams()
 		node.parent = nullptr;
 		node.opened = false;
 		node.closed = false;
+		node.g = 0.0f;
+		node.h = 0.0f;
 	}
 }
 
