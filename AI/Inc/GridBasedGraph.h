@@ -19,12 +19,19 @@ namespace AI
 
 		struct Node
 		{
+			// Graph structure - set in initialize, does not change during search
 			std::array<Node*, 8> neighbors = {};
 			int columns = 0;
 			int row = 0;
+
+			// Search paramters, should be reset before each search
+			Node* parent = nullptr;
+			bool opened = false;
+			bool closed = false;
 		};
 
 		void Initialize(int columns, int rows);
+		void ResetSearchParams();
 
 		Node* GetNode(int column, int row);
 		const Node* GetNode(int column, int row) const;

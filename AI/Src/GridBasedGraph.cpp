@@ -28,20 +28,39 @@ void GridBasedGraph::Initialize(int columns, int rows)
 
 }
 
+void AI::GridBasedGraph::ResetSearchParams()
+{
+	for (auto& node: mNodes)
+	{
+		node.parent = nullptr;
+		node.opened = false;
+		node.closed = false;
+	}
+}
+
 GridBasedGraph::Node* GridBasedGraph::GetNode(int column, int row)
 {
 	// Done
+	if (column < 0 || column >= mColumns || row < 0 || row >= mRows)
+	{
+		return nullptr;
+	}
 	return &mNodes[GetIndex(column, row)];
 }
 
 const GridBasedGraph::Node* GridBasedGraph::GetNode(int column, int row) const
 {
 	// Done
+	if (column < 0 || column >= mColumns || row < 0 || row >= mRows)
+	{
+		return nullptr;
+	}
 	return &mNodes[GetIndex(column, row)] ;
 }
 
 int GridBasedGraph::GetIndex(int column, int row) const
 {
-	// Done
+	// Done+
+
 	return column + (row * mColumns);
 }

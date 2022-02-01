@@ -37,7 +37,8 @@ void TileMap::LoadTiles(const char* fileName)
 	}
 
 	fclose(file);
-
+	mTileWidth = X::GetSpriteWidth(mTiles.front());
+	mTileHeight = X::GetSpriteHeight(mTiles.front());
 }
 
 void TileMap::LoadMap(const char* fileName)
@@ -180,6 +181,7 @@ void TileMap::LoadMap(const char* fileName)
 
 void TileMap::Render() const
 {
+
 	// TODO - Draw the map using mTiles and mMap
 	int offSet = tileSize / 2;
 	// TODO - Use X::DrawScreenLine to visualize the graph
@@ -222,6 +224,13 @@ void TileMap::Render() const
 				X::DrawScreenLine(current->columns * tileSize + offSet, current->row * tileSize + offSet, current->neighbors[GridBasedGraph::NorthWest]->columns * tileSize + offSet, current->neighbors[GridBasedGraph::NorthWest]->row * tileSize + offSet, X::Colors::Orange);
 			}
 		}
+
+
+
+
+
+
+
 	}
 	//Draw the map using mTiles and mMap
 	for (int y = 0; y < mRows ; y++)
@@ -263,4 +272,35 @@ bool TileMap::IsBlocked(int x, int y) const
 	const int tile = mMap[ToIndex(x, y, mColumns)];
 	const bool blocked = mBlocked[tile];
 	return blocked;
+}	
+
+std::vector<X::Math::Vector2> TileMap::FindPathBFS(int startX, int startY, int endX, int endY)
+{
+	std::vector<X::Math::Vector2> path;
+
+	BFS bfs;
+	if (bfs.Run(mGraph, startX, startY, endX, endY))
+	{
+		const auto& closedList = bfs.GetClosedList();
+		auto node = closedList.back();
+		while (node != nullptr)
+		{
+			path.push_back(GetPixelPosition(node->columns, node->row));
+			node = node->parent;
+		}
+		std::reverse(path.begin(), path.end());
+
+		// Cache the closed list for visualization
+		mClosedList = closedList;
+	}
+
+	return path;
+}
+
+X::Math::Vector2 TileMap::GetPixelPosition(int x, int y) const
+{
+	return {
+		(x + 0.5f) * mTileWidth,
+		(y + 0.5f) * mTileHeight,
+	};
 }
