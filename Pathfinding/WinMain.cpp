@@ -1,6 +1,7 @@
 #include "TileMap.h"
 #include <XEngine.h> // <> for external includes, "" for internal includes
 #include <iostream>
+#include <string>
 TileMap tileMap;
 X::TextureId textureId;
 X::Math::Vector2 position;
@@ -11,7 +12,7 @@ int endX = 20;
 int endY = 15;
 int mTileWidth = 32;
 int mTileHeight = 32;
-
+std::string message = "";
 std::vector<X::Math::Vector2> path;
 //--------------------------------------------------
 
@@ -50,19 +51,25 @@ bool GameLoop(float deltaTime)
 	if (X::IsKeyPressed(X::Keys::ONE))
 	{
 		path = tileMap.FindPathBFS(startX,startY,endX,endY);
+		message = "BFS";
 	}
 	if (X::IsKeyPressed(X::Keys::TWO))
 	{
 		path = tileMap.FindPathDFS(startX, startY, endX, endY);
+		message = "DFS";
 	}
 	if (X::IsKeyDown(X::Keys::THREE))
 	{
 		path = tileMap.FindPathDijkstra(startX, startY, endX, endY);
+		message = "Dijkstra";
 	}
 	if (X::IsKeyDown(X::Keys::FOUR))
 	{
 		path = tileMap.FindPathASearch(startX, startY, endX, endY);
+		message = "A*";
 	}
+
+	X::DrawScreenText(message.c_str(), 500, 650, 60, X::Colors::AliceBlue);
 
 	for (int i = 0; i + 1 < path.size(); ++i)
 	{
